@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " S ",
+    "LGL",
+    " L "
+  ],
+  "key": {
+    "S": { "item": "minecraft:string" },
+    "L": { "item": "minecraft:leather" },
+    "G": { "item": "eidolon:soul_shard" }
+  },
+  "result": { "item": "soulpouch:soul_pouch" },
+  "show_notification": true
+}

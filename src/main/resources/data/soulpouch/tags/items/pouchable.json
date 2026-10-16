@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "eidolon:soul_shard",
+    { "id": "eidolon:lesser_soul_gem", "required": false }
+  ]
+}

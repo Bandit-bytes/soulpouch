@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.bandit.soulpouch.mixin",
+  "plugin": "net.bandit.soulpouch.mixin.SoulPouchMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "soulpouch.refmap.json",
+  "mixins": [
+    "MerchantMenuMixin",
+    "SoulEnchanterContainerMixin",
+    "compat.waystones.PlayerWaystoneManagerMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "item.soulpouch.soul_pouch": "Soul Pouch",
+  "curios.identifier.soul_pouch": "Soul Pouch",
+  "curios.modifiers.soul_pouch": "When worn:",
+
+  "soulpouch.tooltip.empty": "Empty",
+  "soulpouch.tooltip.total": "  Total: %s",
+  "soulpouch.tooltip.shift": "Hold Shift for usage",
+  "soulpouch.tooltip.help1": "Wear in the Soul Pouch slot: soul items you walk over go in here.",
+  "soulpouch.tooltip.help2": "Right-click it in a slot: empty hand takes a stack, soul items store them.",
+  "soulpouch.tooltip.help3": "In hand: use to take a stack, sneak-use to store all from your inventory.",
+  "soulpouch.tooltip.death": "Kept on death, but %s%% of its contents are lost.",
+
+  "soulpouch.msg.empty": "The Soul Pouch is empty.",
+  "soulpouch.msg.not_worn": "You aren't wearing a Soul Pouch.",
+  "soulpouch.msg.deposited": "Stored %s soul items.",
+  "soulpouch.msg.death_lost": "Your Soul Pouch lost %s soul items.",
+  "soulpouch.msg.death_dropped": "%s soul items spilled from your Soul Pouch.",
+  "soulpouch.msg.waystone_need": "This journey needs %s %s in your Soul Pouch.",
+  "soulpouch.msg.waystone_paid": "Paid %s %s from your Soul Pouch.",
+
+  "key.categories.soulpouch": "Soul Pouch",
+  "key.soulpouch.withdraw": "Withdraw from Soul Pouch (sneak: one)"
+}
