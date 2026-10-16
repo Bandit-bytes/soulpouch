@@ -2,7 +2,6 @@ package net.bandit.soulpouch;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-
 public final class Config {
     private Config() {}
 
@@ -16,13 +15,26 @@ public final class Config {
     public static final ForgeConfigSpec.BooleanValue DEATH_LOSS_WITH_KEEP_INVENTORY;
     public static final ForgeConfigSpec.BooleanValue DEATH_DROP_LOST;
 
+    public static final ForgeConfigSpec.BooleanValue MOB_DROPS_ENABLED;
+    public static final ForgeConfigSpec.BooleanValue MOB_DROPS_REQUIRE_PLAYER;
+    public static final ForgeConfigSpec.ConfigValue<java.util.List<? extends Integer>> MOB_DROPS_WEIGHTS;
+    public static final ForgeConfigSpec.IntValue MOB_DROPS_LOOTING;
+    public static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> MOB_DROPS_BLACKLIST;
+
     public static final ForgeConfigSpec.BooleanValue FEED_SOUL_ENCHANTER;
     public static final ForgeConfigSpec.BooleanValue PAY_VILLAGER_TRADES;
 
     public enum WaystoneMode { XP_ONLY, SOULS_THEN_XP, SOULS_ONLY }
     public static final ForgeConfigSpec.EnumValue<WaystoneMode> WAYSTONE_MODE;
     public static final ForgeConfigSpec.ConfigValue<String> WAYSTONE_CURRENCY;
+    public static final ForgeConfigSpec.BooleanValue WAYSTONE_USE_XP_PRICE;
     public static final ForgeConfigSpec.DoubleValue WAYSTONE_SOULS_PER_LEVEL;
+    public static final ForgeConfigSpec.IntValue WAYSTONE_BASE_COST;
+    public static final ForgeConfigSpec.IntValue WAYSTONE_BLOCKS_PER_SOUL;
+    public static final ForgeConfigSpec.IntValue WAYSTONE_MAX_COST;
+    public static final ForgeConfigSpec.IntValue WAYSTONE_DIMENSION_COST;
+    public static final ForgeConfigSpec.DoubleValue WAYSTONE_GLOBAL_MULTIPLIER;
+    public static final ForgeConfigSpec.BooleanValue WAYSTONE_FREE_WITH_WARP_ITEMS;
 
     static {
         ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
@@ -45,6 +57,24 @@ public final class Config {
                 .define("dropLostItems", false);
         b.pop();
 
+        b.push("mobDrops");
+        MOB_DROPS_ENABLED = b.comment("Every mob has a chance to drop soul shards when killed.")
+                .define("enabled", true);
+        MOB_DROPS_REQUIRE_PLAYER = b.comment("Only drop when a player (or their tamed pet / projectile) made the kill.",
+                        "Stops mob farms with no player involvement from generating shards.")
+                .define("requirePlayerKill", true);
+        MOB_DROPS_WEIGHTS = b.comment(
+                        "Relative weights for dropping 0, 1, 2 and 3 shards. Default 50/40/9/1 means",
+                        "0 = 50%, 1 = 40%, 2 = 9%, 3 = 1%  (about 0.61 shards per kill on average).")
+                .defineList("weights", java.util.List.of(50, 40, 9, 1),
+                        o -> o instanceof Integer i && i >= 0);
+        MOB_DROPS_LOOTING = b.comment("Each Looting level adds this many extra weight points to the 1/2/3 results.")
+                .defineInRange("lootingBonusWeight", 2, 0, 1000);
+        MOB_DROPS_BLACKLIST = b.comment("Entity ids that never drop shards, e.g. \"minecraft:silverfish\".",
+                        "Use \"modid:*\" to block a whole mod.")
+                .defineList("blacklist", java.util.List.of("minecraft:armor_stand"), o -> o instanceof String);
+        b.pop();
+
         b.push("integration");
         FEED_SOUL_ENCHANTER = b.comment("Opening an Eidolon Soul Enchanter fills its shard slot from the pouch, and returns leftovers on close.")
                 .define("feedSoulEnchanter", true);
@@ -54,14 +84,31 @@ public final class Config {
 
         b.push("waystones");
         WAYSTONE_MODE = b.comment(
-                        "XP_ONLY: Waystones works normally.",
-                        "SOULS_THEN_XP: pay with souls if the pouch has enough, otherwise normal XP cost.",
-                        "SOULS_ONLY: travel always costs souls; no pouch / not enough souls = no teleport.")
-                .defineEnum("mode", WaystoneMode.SOULS_THEN_XP);
+                        "XP_ONLY: Waystones works normally, no souls involved.",
+                        "SOULS_ONLY: travel costs souls instead of XP; not enough souls = no teleport.",
+                        "SOULS_THEN_XP: pay with souls if the pouch has enough, otherwise Waystones' normal XP cost",
+                        "  (note: Waystones' own XP costs default to 0, so this falls back to free travel unless you raise them).")
+                .defineEnum("mode", WaystoneMode.SOULS_ONLY);
         WAYSTONE_CURRENCY = b.comment("Item used to pay for travel.")
                 .define("currencyItem", "eidolon:soul_shard");
-        WAYSTONE_SOULS_PER_LEVEL = b.comment("Souls charged per XP level Waystones would have charged (rounded up).")
+        WAYSTONE_USE_XP_PRICE = b.comment(
+                        "true  = price is Waystones' own XP cost x soulsPerXpLevel (set XP costs in waystones-common.toml).",
+                        "false = use the soul price below (works no matter how Waystones' XP costs are configured).")
+                .define("useWaystonesXpPrice", false);
+        WAYSTONE_SOULS_PER_LEVEL = b.comment("Only with useWaystonesXpPrice = true: souls per XP level, rounded up.")
                 .defineInRange("soulsPerXpLevel", 1.0, 0.0, 1000.0);
+        WAYSTONE_BASE_COST = b.comment("Souls charged for every trip.")
+                .defineInRange("baseCost", 1, 0, 100000);
+        WAYSTONE_BLOCKS_PER_SOUL = b.comment("One extra soul per this many blocks travelled. 0 = distance doesn't matter.")
+                .defineInRange("blocksPerSoul", 500, 0, 1000000);
+        WAYSTONE_MAX_COST = b.comment("Cap for same-dimension trips. 0 = no cap.")
+                .defineInRange("maxCost", 5, 0, 100000);
+        WAYSTONE_DIMENSION_COST = b.comment("Flat price for travel to another dimension.")
+                .defineInRange("dimensionalCost", 5, 0, 100000);
+        WAYSTONE_GLOBAL_MULTIPLIER = b.comment("Price multiplier when the destination is a global waystone.")
+                .defineInRange("globalWaystoneMultiplier", 1.0, 0.0, 100.0);
+        WAYSTONE_FREE_WITH_WARP_ITEMS = b.comment("Warp scrolls / return scrolls / warp stones travel without a soul cost.")
+                .define("freeWithWarpItems", false);
         b.pop();
 
         SERVER_SPEC = b.build();

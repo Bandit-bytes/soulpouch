@@ -48,12 +48,11 @@ public abstract class SoulEnchanterContainerMixin extends AbstractContainerMenu 
 
         Item shard = Registry.SOUL_SHARD.get();
         ItemStack slot = tableInventory.getItem(1);
-        if (!slot.isEmpty() && !slot.is(shard)) return;
+        if (!slot.isEmpty()) return;
 
-        int have = slot.isEmpty() ? 0 : slot.getCount();
-        int want = shard.getMaxStackSize(new ItemStack(shard)) - have;
-        int got = PouchContents.extract(pouch, shard, want);
-        if (got > 0) tableInventory.setItem(1, new ItemStack(shard, have + got));
+        if (PouchContents.extract(pouch, shard, 1) > 0) {
+            tableInventory.setItem(1, new ItemStack(shard, 1));
+        }
     }
 
     @Inject(method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/inventory/ContainerLevelAccess;)V",

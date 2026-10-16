@@ -12,10 +12,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * predictExperienceLevelCost is what Waystones uses for the cost shown in the selection screen and for
- * the inventory-button "can I afford it" check. When souls will pay, report 0 levels so players with
- * no XP aren't blocked and the screen doesn't show an XP price.
- * The real charge goes through WaystoneTeleportEvent (see WaystonesCompat).
+ * predictExperienceLevelCost is what Waystones uses for the XP price shown in the selection screen and
+ * for the inventory-button "can I afford it" check. When souls replace XP, report 0 levels so players
+ * with no XP aren't blocked. The real charge goes through WaystoneTeleportEvent (see WaystonesCompat).
  *
  * Only applied when Waystones is present (SoulPouchMixinPlugin).
  */
@@ -25,12 +24,15 @@ public abstract class PlayerWaystoneManagerMixin {
     @Inject(method = "predictExperienceLevelCost", at = @At("RETURN"), cancellable = true)
     private static void soulpouch$soulsReplaceXp(Entity player, IWaystone waystone, WarpMode warpMode, IWaystone fromWaystone,
                                                  CallbackInfoReturnable<Integer> cir) {
+        if (WaystonesCompat.RAW_XP.get()) return;
         int xp = cir.getReturnValueI();
         if (xp <= 0) return;
         Config.WaystoneMode mode = WaystonesCompat.mode();
-        if (mode == Config.WaystoneMode.SOULS_ONLY
-                || (mode == Config.WaystoneMode.SOULS_THEN_XP && WaystonesCompat.canPayWithSouls(player, xp))) {
+        if (mode == Config.WaystoneMode.SOULS_ONLY) {
             cir.setReturnValue(0);
+        } else if (mode == Config.WaystoneMode.SOULS_THEN_XP) {
+            int souls = WaystonesCompat.soulCost(player, waystone, fromWaystone, xp, false);
+            if (WaystonesCompat.pouchHas(player, souls)) cir.setReturnValue(0);
         }
     }
 }

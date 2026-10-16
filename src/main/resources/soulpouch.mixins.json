@@ -10,7 +10,9 @@
     "SoulEnchanterContainerMixin",
     "compat.waystones.PlayerWaystoneManagerMixin"
   ],
-  "client": [],
+  "client": [
+    "compat.waystones.WaystoneButtonMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

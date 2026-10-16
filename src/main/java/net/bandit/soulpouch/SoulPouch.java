@@ -45,6 +45,7 @@ public class SoulPouch {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
 
         MinecraftForge.EVENT_BUS.register(net.bandit.soulpouch.event.CommonEvents.class);
+        MinecraftForge.EVENT_BUS.register(net.bandit.soulpouch.event.MobShardDrops.class);
 
         if (ModList.get().isLoaded("waystones")) {
             net.bandit.soulpouch.compat.waystones.WaystonesCompat.init();
