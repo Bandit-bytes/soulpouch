@@ -23,28 +23,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Replaces Waystones' XP-level travel cost with soul items from the pouch.
- *
- * Price: by default our own distance-based soul price (see the [waystones] server config), because
- * Waystones 1.20.1 ships with every XP cost multiplier at 0 = all travel is free, so converting its
- * XP cost would always give 0 souls. Set useWaystonesXpPrice = true to convert its XP cost instead.
- *
- * Flow: Pre event -> work out the price, check the pouch, zero the XP cost and remember the price.
- * Waystones then runs its own checks and teleports -> Post event -> take the souls.
- * Charging in Post means a teleport that gets rejected later never costs anything.
- *
- * Only loaded when Waystones is installed (see SoulPouch constructor).
- */
+
 public final class WaystonesCompat {
     private WaystonesCompat() {}
 
     private static final Map<UUID, Integer> PENDING = new ConcurrentHashMap<>();
 
-    /** While true, PlayerWaystoneManagerMixin leaves Waystones' XP price untouched (used to read the real price). */
     public static final ThreadLocal<Boolean> RAW_XP = ThreadLocal.withInitial(() -> false);
 
-    /** Waystones' own XP price, without our "souls replace XP" change. */
     public static int rawXpCost(Entity player, IWaystone target, WarpMode mode, @Nullable IWaystone from) {
         RAW_XP.set(true);
         try {
@@ -59,14 +45,13 @@ public final class WaystonesCompat {
                 || mode == WarpMode.BOUND_SCROLL || mode == WarpMode.WARP_STONE;
     }
 
-    /** What the selection screen should show: the soul price, or -1 if souls won't be used for this trip. */
     public static int displayedSoulCost(Entity player, IWaystone target, WarpMode mode, @Nullable IWaystone from) {
         Config.WaystoneMode m = mode();
         if (m == Config.WaystoneMode.XP_ONLY) return -1;
         int xp = Config.WAYSTONE_USE_XP_PRICE.get() ? rawXpCost(player, target, mode, from) : 0;
         int souls = soulCost(player, target, from, xp, isWarpItemMode(mode));
         if (souls <= 0) return -1;
-        if (m == Config.WaystoneMode.SOULS_THEN_XP && !pouchHas(player, souls)) return -1; // XP will be charged instead
+        if (m == Config.WaystoneMode.SOULS_THEN_XP && !pouchHas(player, souls)) return -1;
         return souls;
     }
 
@@ -89,11 +74,6 @@ public final class WaystonesCompat {
         return item == null ? net.minecraft.world.item.Items.AIR : item;
     }
 
-    /**
-     * Soul price of a trip. 0 = free.
-     *
-     * @param xpCost what Waystones itself would charge in XP levels (only used with useWaystonesXpPrice)
-     */
     public static int soulCost(Entity entity, IWaystone target, @Nullable IWaystone from, int xpCost, boolean usingWarpItem) {
         if (!(entity instanceof Player player) || player.getAbilities().instabuild) return 0;
         if (target == null) return 0;
@@ -121,7 +101,6 @@ public final class WaystonesCompat {
         return (int) Math.ceil(cost);
     }
 
-    /** True if the worn pouch holds at least {@code souls} of the currency. Works client side too. */
     public static boolean pouchHas(Entity entity, int souls) {
         if (souls <= 0) return true;
         if (!(entity instanceof Player player)) return false;
@@ -152,7 +131,6 @@ public final class WaystonesCompat {
             player.displayClientMessage(SoulPouch.tr("msg.waystone_need", souls, currency().getDescription())
                     .withStyle(ChatFormatting.RED), true);
         }
-        // SOULS_THEN_XP without enough souls: Waystones charges its normal XP cost.
     }
 
     private static void onPost(WaystoneTeleportEvent.Post event) {

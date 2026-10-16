@@ -11,13 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * predictExperienceLevelCost is what Waystones uses for the XP price shown in the selection screen and
- * for the inventory-button "can I afford it" check. When souls replace XP, report 0 levels so players
- * with no XP aren't blocked. The real charge goes through WaystoneTeleportEvent (see WaystonesCompat).
- *
- * Only applied when Waystones is present (SoulPouchMixinPlugin).
- */
+
 @Mixin(value = PlayerWaystoneManager.class, remap = false)
 public abstract class PlayerWaystoneManagerMixin {
 

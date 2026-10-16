@@ -14,18 +14,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Pouch contents live in the pouch stack's NBT:  {SoulPouch: {"eidolon:soul_shard": 120, ...}}
- * Counts are plain ints, so the pouch can hold far more than a stack.
- *
- * (NeoForge 1.21.1 port: swap this for a DataComponent holding a Map<Item,Integer>.)
- */
+
 public final class PouchContents {
     private PouchContents() {}
 
     private static final String KEY = "SoulPouch";
 
-    /** True if this stack is something the pouch accepts (in the tag, and no extra NBT that would be lost). */
     public static boolean canStore(ItemStack stack) {
         return !stack.isEmpty() && stack.is(SoulPouch.POUCHABLE) && !stack.hasTag();
     }
@@ -62,7 +56,6 @@ public final class PouchContents {
         return (int) Math.min(Integer.MAX_VALUE, sum);
     }
 
-    /** All stored items, primary item first, then by amount. Unknown/removed items are skipped. */
     public static List<Map.Entry<Item, Integer>> entries(ItemStack pouch) {
         List<Map.Entry<Item, Integer>> out = new ArrayList<>();
         CompoundTag d = data(pouch, false);
@@ -105,12 +98,10 @@ public final class PouchContents {
         }
     }
 
-    /** How many more of this item fit. */
     public static int space(ItemStack pouch, Item item) {
         return Math.max(0, capacity() - get(pouch, item));
     }
 
-    /** Adds up to {@code amount}; returns how many were actually added. */
     public static int insert(ItemStack pouch, Item item, int amount) {
         if (amount <= 0 || !canStore(item)) return 0;
         int add = Math.min(amount, space(pouch, item));
@@ -121,7 +112,6 @@ public final class PouchContents {
         return add;
     }
 
-    /** Removes up to {@code amount}; returns how many were actually removed. */
     public static int extract(ItemStack pouch, Item item, int amount) {
         if (amount <= 0) return 0;
         CompoundTag d = data(pouch, false);
@@ -135,7 +125,6 @@ public final class PouchContents {
         return take;
     }
 
-    /** Deposits as much of {@code stack} as fits, shrinking it. Returns amount moved. */
     public static int insertStack(ItemStack pouch, ItemStack stack) {
         if (!canStore(stack)) return 0;
         int moved = insert(pouch, stack.getItem(), stack.getCount());
@@ -143,7 +132,6 @@ public final class PouchContents {
         return moved;
     }
 
-    /** The item to hand out first: primary item if stored, else the most plentiful one. */
     public static Item firstToWithdraw(ItemStack pouch) {
         List<Map.Entry<Item, Integer>> list = entries(pouch);
         return list.isEmpty() ? null : list.get(0).getKey();

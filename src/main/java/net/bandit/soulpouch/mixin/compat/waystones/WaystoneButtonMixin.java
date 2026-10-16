@@ -34,7 +34,6 @@ public abstract class WaystoneButtonMixin {
 
     @Shadow(remap = false) @Final private IWaystone waystone;
 
-    /** -1 = souls aren't used for this destination. */
     @Unique private int soulpouch$cost = -1;
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
@@ -43,7 +42,6 @@ public abstract class WaystoneButtonMixin {
         Player player = mc.player;
         if (player == null) return;
 
-        // The screen is assigned before init() builds its buttons, so the menu tells us how we're travelling.
         WarpMode mode = WarpMode.WAYSTONE_TO_WAYSTONE;
         IWaystone from = null;
         if (mc.screen instanceof AbstractContainerScreen<?> screen && screen.getMenu() instanceof WaystoneSelectionMenu menu) {

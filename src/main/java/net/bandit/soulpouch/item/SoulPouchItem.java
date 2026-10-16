@@ -46,7 +46,6 @@ public class SoulPouchItem extends Item implements ICurioItem {
     }
 
 
-    /** Cursor holds the pouch, player right-clicks a slot. */
     @Override
     public boolean overrideStackedOnOther(ItemStack pouch, Slot slot, ClickAction action, Player player) {
         if (action != ClickAction.SECONDARY || pouch.getCount() != 1) return false;

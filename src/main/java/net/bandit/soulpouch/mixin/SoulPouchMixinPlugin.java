@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
-/** Skips mixins for optional mods that aren't installed. */
 public class SoulPouchMixinPlugin implements IMixinConfigPlugin {
 
     private static boolean isLoaded(String modId) {
