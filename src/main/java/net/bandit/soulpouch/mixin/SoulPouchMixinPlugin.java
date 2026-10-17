@@ -17,6 +17,7 @@ public class SoulPouchMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains(".compat.waystones.")) return isLoaded("waystones");
+        if (mixinClassName.contains(".compat.bonfires.")) return isLoaded("bonfires");
         if (mixinClassName.endsWith("SoulEnchanterContainerMixin")) return isLoaded("eidolon");
         return true;
     }

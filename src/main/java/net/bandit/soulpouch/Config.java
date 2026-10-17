@@ -2,6 +2,7 @@ package net.bandit.soulpouch;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+
 public final class Config {
     private Config() {}
 
@@ -35,6 +36,13 @@ public final class Config {
     public static final ForgeConfigSpec.IntValue WAYSTONE_DIMENSION_COST;
     public static final ForgeConfigSpec.DoubleValue WAYSTONE_GLOBAL_MULTIPLIER;
     public static final ForgeConfigSpec.BooleanValue WAYSTONE_FREE_WITH_WARP_ITEMS;
+
+    public static final ForgeConfigSpec.BooleanValue BONFIRE_ENABLED;
+    public static final ForgeConfigSpec.ConfigValue<String> BONFIRE_CURRENCY;
+    public static final ForgeConfigSpec.IntValue BONFIRE_BASE_COST;
+    public static final ForgeConfigSpec.IntValue BONFIRE_BLOCKS_PER_SOUL;
+    public static final ForgeConfigSpec.IntValue BONFIRE_MAX_COST;
+    public static final ForgeConfigSpec.IntValue BONFIRE_DIMENSION_COST;
 
     static {
         ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
@@ -109,6 +117,22 @@ public final class Config {
                 .defineInRange("globalWaystoneMultiplier", 1.0, 0.0, 100.0);
         WAYSTONE_FREE_WITH_WARP_ITEMS = b.comment("Warp scrolls / return scrolls / warp stones travel without a soul cost.")
                 .define("freeWithWarpItems", false);
+        b.pop();
+
+        b.push("bonfires");
+        BONFIRE_ENABLED = b.comment("Bonfires travel costs souls from the pouch (Bonfires travel is normally free).",
+                        "Not enough souls = you can't travel.")
+                .define("enabled", true);
+        BONFIRE_CURRENCY = b.comment("Item used to pay for travel.")
+                .define("currencyItem", "eidolon:soul_shard");
+        BONFIRE_BASE_COST = b.comment("Souls charged for every trip.")
+                .defineInRange("baseCost", 1, 0, 100000);
+        BONFIRE_BLOCKS_PER_SOUL = b.comment("One extra soul per this many blocks travelled. 0 = distance doesn't matter.")
+                .defineInRange("blocksPerSoul", 500, 0, 1000000);
+        BONFIRE_MAX_COST = b.comment("Cap for same-dimension trips. 0 = no cap.")
+                .defineInRange("maxCost", 5, 0, 100000);
+        BONFIRE_DIMENSION_COST = b.comment("Flat price for travel to another dimension.")
+                .defineInRange("dimensionalCost", 5, 0, 100000);
         b.pop();
 
         SERVER_SPEC = b.build();

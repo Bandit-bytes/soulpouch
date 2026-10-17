@@ -8,10 +8,12 @@
   "mixins": [
     "MerchantMenuMixin",
     "SoulEnchanterContainerMixin",
-    "compat.waystones.PlayerWaystoneManagerMixin"
+    "compat.waystones.PlayerWaystoneManagerMixin",
+    "compat.bonfires.TravelMixin"
   ],
   "client": [
-    "compat.waystones.WaystoneButtonMixin"
+    "compat.waystones.WaystoneButtonMixin",
+    "compat.bonfires.BonfireScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

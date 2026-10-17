@@ -61,6 +61,7 @@ dependencies {
 
     implementation fg.deobf("maven.modrinth:curios:${curios_version}")
     implementation fg.deobf("curse.maven:eidolon-repraised-870250:${eidolon_file_id}")
+    implementation fg.deobf("maven.modrinth:bonfires:${bonfires_version}")
 
     // Waystones compat (optional)
     implementation fg.deobf("maven.modrinth:balm:${balm_version}")
