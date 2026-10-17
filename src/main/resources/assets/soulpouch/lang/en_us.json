@@ -19,8 +19,13 @@
   "soulpouch.msg.waystone_need": "This journey needs %s %s in your Soul Pouch.",
   "soulpouch.msg.waystone_paid": "Paid %s %s from your Soul Pouch.",
 
-  "gui.waystone_cost": "Costs %s %s",
-  "gui.waystone_have": "Your pouch holds %s",
+  "soulpouch.gui.waystone_cost": "Costs %s %s",
+  "soulpouch.gui.waystone_have": "Your pouch holds %s",
+
+  "soulpouch.msg.bonfire_need": "Traveling to this bonfire needs %s %s in your Soul Pouch.",
+  "soulpouch.msg.bonfire_paid": "Paid %s %s from your Soul Pouch.",
+  "soulpouch.gui.bonfire_cost": "Costs %s %s",
+  "soulpouch.gui.bonfire_have": "Your pouch holds %s",
 
   "key.categories.soulpouch": "Soul Pouch",
   "key.soulpouch.withdraw": "Withdraw from Soul Pouch (sneak: one)"
